@@ -1,5 +1,5 @@
 export default {
-    name: 'L539JZV-M0U53 Quantum Computer',
+    name: 'L539JZV-M0U53 Pocket Quantum Computer',
     tag: 'mouse',
     description:``,
     size: 'small',
