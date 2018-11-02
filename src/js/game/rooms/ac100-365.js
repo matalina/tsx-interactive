@@ -1,6 +1,6 @@
 let room = {
-    name: 'Allied Corp Building 100 Floor 365 hallway',
-    tag: '365-hall',
+    name: 'Allied Corp Building 100 365th Floor',
+    tag: 'ac100-365',
     description: `
     `,
     map: ['365b-home','stairs','elevator'],

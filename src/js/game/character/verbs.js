@@ -31,7 +31,27 @@ let verbs =  {
         return 'You listen carefully.'
     },
     look: function(words) {
-        return 'You look around. But you see nothing of interest.'
+        let object = null,
+            room = null;
+        switch(words[0]) {
+            case 'at':
+                object = words.splice(1).join('-');
+                break;
+            case 'north':
+            case 'east':
+            case 'south':
+            case 'west':
+                room = words[0];
+                break;
+            default:
+                return 'You look around. But you see nothing of interest.'
+        }
+        if(object !== null) {
+            return store.state.items[object].description;
+        }
+        if(room !== null) {
+
+        }
     },
 
     move: function(words) {

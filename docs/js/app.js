@@ -4,7 +4,7 @@ webpackJsonp([1],{
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(109);
-module.exports = __webpack_require__(295);
+module.exports = __webpack_require__(306);
 
 
 /***/ }),
@@ -58,7 +58,7 @@ var normalizeComponent = __webpack_require__(230)
 /* script */
 var __vue_script__ = __webpack_require__(231)
 /* template */
-var __vue_template__ = __webpack_require__(294)
+var __vue_template__ = __webpack_require__(305)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -519,7 +519,7 @@ module.exports = function normalizeComponent (
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game_chapters__ = __webpack_require__(232);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_character_verbs__ = __webpack_require__(233);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_character_verbs__ = __webpack_require__(234);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(30);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -569,6 +569,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 
+
 var MarkdownIt = __webpack_require__(88),
     md = new MarkdownIt({
     html: true, // Enable HTML tags in source
@@ -577,7 +578,7 @@ var MarkdownIt = __webpack_require__(88),
 });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'display',
+    name: 'game',
     data: function data() {
         return {
             command: null,
@@ -594,7 +595,7 @@ var MarkdownIt = __webpack_require__(88),
         start: function start() {
             return this.chapters[0];
         }
-    }, Object(__WEBPACK_IMPORTED_MODULE_2_vuex__["mapState"])(['story', 'progress', 'character'])),
+    }, Object(__WEBPACK_IMPORTED_MODULE_2_vuex__["mapState"])(['story', 'progress', 'character', 'location', 'items', 'rooms'])),
     methods: {
         markdown: function markdown(output) {
             return md.render(output);
@@ -615,6 +616,14 @@ var MarkdownIt = __webpack_require__(88),
             if (this.isExit()) {
                 this.exit();
             } else if (this.validateVerb(verb)) {
+                if (this.$store.state.location === null) {
+                    this.saveStory({
+                        type: 'error',
+                        text: '<i class=\'fal fa-fw fa-exclamation-triangle\'></i> There is nothing to do right now.'
+                    });
+                    this.command = '';
+                    return;
+                }
                 var action = this.verbs[verb];
 
                 this.saveStory({
@@ -659,6 +668,7 @@ var MarkdownIt = __webpack_require__(88),
                     text: this.chapters[progress + 1].description
                 });
                 this.saveProgress(progress + 1);
+                this.saveLocation(this.chapters[progress + 1].start);
             } else {
                 this.saveStory({
                     type: 'the-end',
@@ -674,6 +684,10 @@ var MarkdownIt = __webpack_require__(88),
         },
         saveProgress: function saveProgress(chapter_number) {
             this.$store.commit('progress-update', chapter_number);
+        },
+        saveLocation: function saveLocation(room_tag) {
+            var room = this.$store.state.rooms[room_tag];
+            this.$store.commit('location-update', room);
         }
     }
 });
@@ -685,13 +699,31 @@ var MarkdownIt = __webpack_require__(88),
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__chapters_000__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__chapters_001__ = __webpack_require__(233);
 
 
-/* harmony default export */ __webpack_exports__["a"] = ([__WEBPACK_IMPORTED_MODULE_0__chapters_000__["a" /* default */]]);
+
+/* harmony default export */ __webpack_exports__["a"] = ([__WEBPACK_IMPORTED_MODULE_0__chapters_000__["a" /* default */], __WEBPACK_IMPORTED_MODULE_1__chapters_001__["a" /* default */]]);
 
 /***/ }),
 
 /***/ 233:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    title: 'prologue',
+    start: 'ac100-365-b',
+    description: '\n# Prologue\n\nIt\u2019s like any other day, except you wake to the hateful drone of an Allied Corp jingle.  _Allied Corps way_ followed by a few cacophonous notes to close out the commercial that pierced through your dreams. Mouse, your faithful companion, or more appropriately your L539JZV-M0U53 Pocket Quantum Computer in gun metal black, spoke softly in your ear. \u201CNix, an urgent message from Reaper.\u201D\n\nYou groan as your roll out of bed. \u201CWhat does she want now?\u201D\n\nMouse responded by playing the voice message she\u2019d taken while you\u2019d been asleep. A soft voice echoed in your inner ear. \u201CNix, Did you fucking see. Allied Corp has an epic bounty. I want in, but I need your help. Call the fuck back.\u201D What should have sounded like a sweet innocent girl was filled with vulgarities and a harshness that made you shiver. Reaper was just a kid, but Reaper was powerful. Turning Reaper away wasn\'t something you wanted to do lightly.\n\nBut what was this bounty? Should you take the risk? Was it worth it? Look around or ask Mouse if she can help you out.\n        ',
+    exit: 'call reaper',
+    next: 'Mouse calls Reaper and you wait for the infamous gang leader to pick up.',
+    map: ['ac100-365-b', 'ac100-365-b-bath'],
+    script: []
+});
+
+/***/ }),
+
+/***/ 234:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -729,7 +761,25 @@ var verbs = {
         return 'You listen carefully.';
     },
     look: function look(words) {
-        return 'You look around. But you see nothing of interest.';
+        var object = null,
+            room = null;
+        switch (words[0]) {
+            case 'at':
+                object = words.splice(1).join('-');
+                break;
+            case 'north':
+            case 'east':
+            case 'south':
+            case 'west':
+                room = words[0];
+                break;
+            default:
+                return 'You look around. But you see nothing of interest.';
+        }
+        if (object !== null) {
+            return __WEBPACK_IMPORTED_MODULE_0__store__["a" /* default */].state.items[object].description;
+        }
+        if (room !== null) {}
     },
 
     move: function move(words) {
@@ -791,12 +841,12 @@ var verbs = {
 
 /***/ }),
 
-/***/ 236:
+/***/ 237:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__hunter__ = __webpack_require__(237);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__aphen__ = __webpack_require__(238);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__hunter__ = __webpack_require__(238);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__aphen__ = __webpack_require__(239);
 
 
 
@@ -841,7 +891,7 @@ var character = {
 
 /***/ }),
 
-/***/ 237:
+/***/ 238:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -854,7 +904,7 @@ var character = {
 
 /***/ }),
 
-/***/ 238:
+/***/ 239:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -863,13 +913,171 @@ var character = {
     tag: 'aphen',
     description: 'Apophenism is a mutation that allows a person to see the elemental make up of their surroundings at it\'s most basic level.  This particular mutation can render a person dysfunctional if they do not learn how to control the visual stimuli the mutation causes.  It is rare that a person with apophenism survives with both eyes intact.  Most of the time they remove their own eyes to save their sanity.  Most aphens have the ability to create things from nothing.',
     verbs: {
-        create: function create(something) {}
+        create: function create(something) {
+            return 'You create something.';
+        }
     }
 });
 
 /***/ }),
 
-/***/ 294:
+/***/ 240:
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ 241:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    name: 'L539JZV-M0U53 Pocket Quantum Computer',
+    tag: 'mouse',
+    description: '\n## L539JZV-M0U53 Pocket Quantum Computer\n\nA gun metal colored box with no visible ports or accessories.  The only visible thing is the model and serial number stamped into metal.\n    ',
+    size: 'small',
+    verbs: {
+        what: function what(something) {
+            return 'M0U53 doesn\'t know what that is.';
+        },
+        scan: function scan(something) {
+            return 'M0U53 scans.';
+        }
+    }
+});
+
+/***/ }),
+
+/***/ 242:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var room = {
+    name: 'Old New York',
+    tag: 'old-new-york',
+    description: '\n    ',
+    map: ['ac100'],
+    items: []
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (room);
+
+/***/ }),
+
+/***/ 243:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var room = {
+    name: 'Allied Corp Building 100',
+    tag: 'ac100',
+    description: '\n    ',
+    map: ['365b-hall', 'old-new-york'],
+    items: []
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (room);
+
+/***/ }),
+
+/***/ 244:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var room = {
+    name: 'Allied Corp Building 100 100th Floor',
+    tag: 'ac100-100',
+    description: '\n    ',
+    map: ['365b-hall', 'old-new-york'],
+    items: []
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (room);
+
+/***/ }),
+
+/***/ 245:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var room = {
+    name: 'Allied Corp Building 100 365th Floor',
+    tag: 'ac100-365',
+    description: '\n    ',
+    map: ['365b-home', 'stairs', 'elevator'],
+    items: ['home-lock']
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (room);
+
+/***/ }),
+
+/***/ 246:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var room = {
+    name: 'Allied Corp Building 100 Floor 365 Room B Studio',
+    tag: 'ac100-365-b',
+    description: '\n    ',
+    map: ['365b-bath', '365-hall'],
+    items: ['home-lock', '365b-prep', '365b-k300w', '365b-bed', '365b-sofa', '365b-table', '365b-kitchen', '365b-nightstand', '365b-stool-1', '365b-stool-2', '365b-stool-3', '365b-stool-4']
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (room);
+
+/***/ }),
+
+/***/ 247:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var room = {
+    name: 'Allied Corp Building 100 Floor 365 Room B Bathroom',
+    tag: 'ac100-365-b-bath',
+    description: '\n    ',
+    map: ['365b-home'],
+    items: ['365b-bh200', '365b-b-closet', '365b-k150w', '365b-k400sw']
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (room);
+
+/***/ }),
+
+/***/ 248:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var room = {
+    name: 'Allied Corp Building 100 Elevators',
+    tag: 'ac100-elevator',
+    description: '\n    ',
+    map: ['365b-hall', 'old-new-york'],
+    items: []
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (room);
+
+/***/ }),
+
+/***/ 249:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var room = {
+    name: 'Allied Corp Building 100 Stairs',
+    tag: 'ac100-stairs',
+    description: '\n    ',
+    map: ['365b-hall', 'old-new-york'],
+    items: []
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (room);
+
+/***/ }),
+
+/***/ 305:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -983,7 +1191,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 295:
+/***/ 306:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -996,9 +1204,11 @@ if (false) {
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ({
     title: 'the search for x',
+    start: null,
     description: '\n# The Search for X\n\nIt is the 3121 and Earth is overpopulated.  78 billion people and growing live on the dead rock that is now Earth.  The ice caps have melted and the water that remains is polluted.  Only a giant city remains across the planet.  The governments of the twenty-first century have fallen replaced by six mega-corporations that control all aspects of life including births and deaths.  \n\nLife begin and end at prestige rating of zero. It is a constant race to see who is better, or worse, and who is ultimately worthy of surviving until a ripe old age.\n\nA recent leak from Allied Corporation, the oldest and strongest of the megacorps, reveals they are searching for something referred to as \'X\'.  You are one of the first few to learn of this development.  \n\n**Do you wish to undertake this mission?** \n        ',
     exit: 'yes',
-    next: 'Your acceptance has been noted, Allied Corporation will pay handsomely for any information regarding their missing property.'
+    next: 'Your acceptance has been noted, Allied Corporation will pay handsomely for any information regarding their missing property.',
+    map: []
 });
 
 /***/ }),
@@ -1011,13 +1221,36 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_persistedstate__ = __webpack_require__(87);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__game_character_character__ = __webpack_require__(236);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__game_character_character__ = __webpack_require__(237);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__game_chapters_000__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__game_items_id__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__game_items_id___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__game_items_id__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__game_items_mouse__ = __webpack_require__(241);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__game_rooms_old_new_york__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__game_rooms_ac100__ = __webpack_require__(243);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__game_rooms_ac100_100__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__game_rooms_ac100_365__ = __webpack_require__(245);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__game_rooms_ac100_365_b__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__game_rooms_ac100_365_b_bath__ = __webpack_require__(247);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__game_rooms_ac100_elevator__ = __webpack_require__(248);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__game_rooms_ac100_stairs__ = __webpack_require__(249);
 
 
 
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["default"]);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1031,7 +1264,22 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
             text: __WEBPACK_IMPORTED_MODULE_4__game_chapters_000__["a" /* default */].description
         }],
         character: __WEBPACK_IMPORTED_MODULE_3__game_character_character__["a" /* default */],
-        progress: 0
+        progress: 0,
+        location: null,
+        items: {
+            id: __WEBPACK_IMPORTED_MODULE_5__game_items_id___default.a,
+            mouse: __WEBPACK_IMPORTED_MODULE_6__game_items_mouse__["a" /* default */]
+        },
+        rooms: {
+            'old-new-york': __WEBPACK_IMPORTED_MODULE_7__game_rooms_old_new_york__["a" /* default */],
+            ac100: __WEBPACK_IMPORTED_MODULE_8__game_rooms_ac100__["a" /* default */],
+            'ac100-100': __WEBPACK_IMPORTED_MODULE_9__game_rooms_ac100_100__["a" /* default */],
+            'ac100-365': __WEBPACK_IMPORTED_MODULE_10__game_rooms_ac100_365__["a" /* default */],
+            'ac100-365-b': __WEBPACK_IMPORTED_MODULE_11__game_rooms_ac100_365_b__["a" /* default */],
+            'ac100-365-b-bath': __WEBPACK_IMPORTED_MODULE_12__game_rooms_ac100_365_b_bath__["a" /* default */],
+            'ac100-elevator': __WEBPACK_IMPORTED_MODULE_13__game_rooms_ac100_elevator__["a" /* default */],
+            'ac100-stairs': __WEBPACK_IMPORTED_MODULE_14__game_rooms_ac100_stairs__["a" /* default */]
+        }
     },
     mutations: {
         'story-add': function storyAdd(state, object) {
@@ -1040,6 +1288,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
         'progress-update': function progressUpdate(state, progress) {
             state.progress = progress;
         },
+        'location-update': function locationUpdate(state, room) {
+            state.location = room;
+        },
         'reset': function reset(state) {
             state.story = [{
                 type: 'chapter',
@@ -1047,7 +1298,22 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
                 text: __WEBPACK_IMPORTED_MODULE_4__game_chapters_000__["a" /* default */].description
             }];
             state.character = __WEBPACK_IMPORTED_MODULE_3__game_character_character__["a" /* default */];
+            state.location = null;
             state.progress = 0;
+            state.items = {
+                id: __WEBPACK_IMPORTED_MODULE_5__game_items_id___default.a,
+                mouse: __WEBPACK_IMPORTED_MODULE_6__game_items_mouse__["a" /* default */]
+            };
+            state.rooms = {
+                'old-new-york': __WEBPACK_IMPORTED_MODULE_7__game_rooms_old_new_york__["a" /* default */],
+                ac100: __WEBPACK_IMPORTED_MODULE_8__game_rooms_ac100__["a" /* default */],
+                'ac100-100': __WEBPACK_IMPORTED_MODULE_9__game_rooms_ac100_100__["a" /* default */],
+                'ac100-365': __WEBPACK_IMPORTED_MODULE_10__game_rooms_ac100_365__["a" /* default */],
+                'ac100-365-b': __WEBPACK_IMPORTED_MODULE_11__game_rooms_ac100_365_b__["a" /* default */],
+                'ac100-365-b-bath': __WEBPACK_IMPORTED_MODULE_12__game_rooms_ac100_365_b_bath__["a" /* default */],
+                'ac100-elevator': __WEBPACK_IMPORTED_MODULE_13__game_rooms_ac100_elevator__["a" /* default */],
+                'ac100-stairs': __WEBPACK_IMPORTED_MODULE_14__game_rooms_ac100_stairs__["a" /* default */]
+            };
         }
     }
 }));

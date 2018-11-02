@@ -1,6 +1,6 @@
 let room = {
-    name: 'Allied Corp Building 100 Floor Room 365 B Studio',
-    tag: '365b-home',
+    name: 'Allied Corp Building 100 Floor 365 Room B Studio',
+    tag: 'ac100-365-b',
     description: `
     `,
     map: ['365b-bath','365-hall'],

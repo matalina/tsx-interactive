@@ -1,4 +1,3 @@
-
 let room = {
     name: 'Old New York',
     tag: 'old-new-york',

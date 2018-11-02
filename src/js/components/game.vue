@@ -43,6 +43,7 @@
 <script>
     import chapters from '../game/chapters';
     import verbs from '../game/character/verbs';
+
     import { mapState } from 'vuex';
     const MarkdownIt = require('markdown-it'),
         md = new MarkdownIt({
@@ -52,7 +53,7 @@
         });
 
     export default {
-        name: 'display',
+        name: 'game',
         data: function () {
             return {
                 command: null,
@@ -78,6 +79,9 @@
                 'story',
                 'progress',
                 'character',
+                'location',
+                'items',
+                'rooms',
             ])
         },
         methods: {
@@ -101,6 +105,14 @@
                     this.exit();
                 }
                 else if(this.validateVerb(verb)) {
+                    if(this.$store.state.location === null) {
+                        this.saveStory({
+                            type: 'error',
+                            text: `<i class='fal fa-fw fa-exclamation-triangle'></i> There is nothing to do right now.`,
+                        });
+                        this.command = '';
+                        return;
+                    }
                     let action = this.verbs[verb];
 
                     this.saveStory({
@@ -144,6 +156,7 @@
                         text: this.chapters[progress + 1].description,
                     });
                     this.saveProgress(progress + 1);
+                    this.saveLocation(this.chapters[progress + 1].start)
                 }
                 else {
                     this.saveStory({
@@ -160,6 +173,10 @@
             saveProgress(chapter_number){
                 this.$store.commit('progress-update', chapter_number);
             },
+            saveLocation(room_tag) {
+                let room = this.$store.state.rooms[room_tag];
+                this.$store.commit('location-update', room);
+            }
         },
     };
 </script>
