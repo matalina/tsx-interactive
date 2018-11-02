@@ -4,6 +4,7 @@ import VueEvents from 'vue-events';
 import Vuex from 'vuex'
 
 import Game from './components/game';
+import Timer from './components/timer'
 
 Vue.use(BootstrapVue);
 Vue.use(VueEvents);
@@ -17,5 +18,6 @@ const app = new Vue({
     store,
     components: {
         Game,
+        Timer,
     }
 });
