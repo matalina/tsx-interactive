@@ -672,8 +672,9 @@ var MarkdownIt = __webpack_require__(88),
             } else {
                 this.saveStory({
                     type: 'the-end',
-                    text: '# The End'
+                    text: '\n# The End\n\nReset the game and play again.\n                        '
                 });
+                this.saveLocation(null);
             }
         },
 
@@ -714,7 +715,7 @@ var MarkdownIt = __webpack_require__(88),
 /* harmony default export */ __webpack_exports__["a"] = ({
     title: 'prologue',
     start: 'ac100-365-b',
-    description: '\n# Prologue\n\nIt\u2019s like any other day, except you wake to the hateful drone of an Allied Corp jingle.  _Allied Corps way_ followed by a few cacophonous notes to close out the commercial that pierced through your dreams. Mouse, your faithful companion, or more appropriately your L539JZV-M0U53 Pocket Quantum Computer in gun metal black, spoke softly in your ear. \u201CNix, an urgent message from Reaper.\u201D\n\nYou groan as your roll out of bed. \u201CWhat does she want now?\u201D\n\nMouse responded by playing the voice message she\u2019d taken while you\u2019d been asleep. A soft voice echoed in your inner ear. \u201CNix, Did you fucking see. Allied Corp has an epic bounty. I want in, but I need your help. Call the fuck back.\u201D What should have sounded like a sweet innocent girl was filled with vulgarities and a harshness that made you shiver. Reaper was just a kid, but Reaper was powerful. Turning Reaper away wasn\'t something you wanted to do lightly.\n\nBut what was this bounty? Should you take the risk? Was it worth it? Look around or ask Mouse if she can help you out.\n        ',
+    description: '\n# Prologue\n\nIt\u2019s like any other day, except you wake to the hateful drone of an Allied Corp jingle.  _Allied Corps way_ followed by a few cacophonous notes to close out the commercial that pierced through your dreams. Mouse, your faithful companion, or more appropriately your L539JZV-M0U53 Pocket Quantum Computer in gun metal black, spoke softly in your ear. <span class="mouse">\u201CNix, an urgent message from Reaper.\u201D</span>\n\nYou groan as your roll out of bed. <span class="nix">\u201CWhat does she want now?\u201D</span>\n\nMouse responded by playing the voice message she\u2019d taken while you\u2019d been asleep. A soft voice echoed in your inner ear. <span class="reaper">\u201CNix, Did you fucking see. Allied Corp has an epic bounty. I want in, but I need your help. Call the fuck back.\u201D</span> What should have sounded like a sweet innocent girl was filled with vulgarities and a harshness that made you shiver. Reaper was just a kid, but Reaper was powerful. Turning Reaper away wasn\'t something you wanted to do lightly.\n\nBut what was this bounty? Should you take the risk? Was it worth it? Look around or ask Mouse if she can help you out.\n        ',
     exit: 'call reaper',
     next: 'Mouse calls Reaper and you wait for the infamous gang leader to pick up.',
     map: ['ac100-365-b', 'ac100-365-b-bath'],

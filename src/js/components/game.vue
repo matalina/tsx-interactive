@@ -161,8 +161,13 @@
                 else {
                     this.saveStory({
                         type: 'the-end',
-                        text: `# The End`
+                        text: `
+# The End
+
+Reset the game and play again.
+                        `
                     });
+                    this.saveLocation(null);
                 }
             },
 

@@ -16669,6 +16669,21 @@ readers do not read off random characters that represent icons */
   font-family: 'Font Awesome 5 Brands';
 }
 
+.mouse {
+  color: white;
+  font-style: italic;
+}
+
+.nix {
+  color: firebrick;
+  font-weight: bold;
+}
+
+.reaper {
+  color: #6f42c1;
+  font-weight: bold;
+}
+
 html, body {
   height: 100%;
 }
