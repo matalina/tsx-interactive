@@ -3,7 +3,12 @@ let room = {
     tag: 'ac100-100',
     description: `
     `,
-    map: ['365b-hall','old-new-york'],
+    map: {
+        north: 'ac100-stairs',
+        east: 'itn-pad',
+        south: 'ac100-elevator',
+        west: 'ss-train-pad',
+    },
     items: []
 };
 

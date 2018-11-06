@@ -437,7 +437,10 @@ var verbs = {
             case 'east':
             case 'south':
             case 'west':
-                room = words[0];
+                room = __WEBPACK_IMPORTED_MODULE_0__store__["a" /* default */].state.location.map[words[0]];
+                break;
+            case 'around':
+                room = __WEBPACK_IMPORTED_MODULE_0__store__["a" /* default */].state.location.tag;
                 break;
             default:
                 return 'You look around. But you see nothing of interest.';
@@ -445,7 +448,9 @@ var verbs = {
         if (object !== null) {
             return __WEBPACK_IMPORTED_MODULE_0__store__["a" /* default */].state.items[object].description;
         }
-        if (room !== null) {}
+        if (room !== null) {
+            return __WEBPACK_IMPORTED_MODULE_0__store__["a" /* default */].state.room[room].description;
+        }
     },
 
     move: function move(words) {
@@ -623,7 +628,9 @@ var room = {
     name: 'Old New York',
     tag: 'old-new-york',
     description: '\n    ',
-    map: ['ac100'],
+    map: {
+        ac100: 'ac100'
+    },
     items: []
 };
 
@@ -639,7 +646,12 @@ var room = {
     name: 'Allied Corp Building 100',
     tag: 'ac100',
     description: '\n    ',
-    map: ['365b-hall', 'old-new-york'],
+    map: {
+        north: 'ac100-stairs',
+        east: 'old-new-york',
+        south: 'ac100-elevator',
+        west: 'old-new-york'
+    },
     items: []
 };
 
@@ -655,7 +667,12 @@ var room = {
     name: 'Allied Corp Building 100 100th Floor',
     tag: 'ac100-100',
     description: '\n    ',
-    map: ['365b-hall', 'old-new-york'],
+    map: {
+        north: 'ac100-stairs',
+        east: 'itn-pad',
+        south: 'ac100-elevator',
+        west: 'ss-train-pad'
+    },
     items: []
 };
 
@@ -671,7 +688,12 @@ var room = {
     name: 'Allied Corp Building 100 365th Floor',
     tag: 'ac100-365',
     description: '\n    ',
-    map: ['365b-home', 'stairs', 'elevator'],
+    map: {
+        north: 'ac100-stairs',
+        west: 'ac100-365-b',
+        east: null,
+        south: 'ac100-elevator'
+    },
     items: ['home-lock']
 };
 
@@ -687,7 +709,12 @@ var room = {
     name: 'Allied Corp Building 100 Floor 365 Room B Studio',
     tag: 'ac100-365-b',
     description: '\n    ',
-    map: ['365b-bath', '365-hall'],
+    map: {
+        north: 'ac100-365-b-bath',
+        east: 'ac100-365',
+        south: null,
+        west: null
+    },
     items: ['home-lock', '365b-prep', '365b-k300w', '365b-bed', '365b-sofa', '365b-table', '365b-kitchen', '365b-nightstand', '365b-stool-1', '365b-stool-2', '365b-stool-3', '365b-stool-4']
 };
 
@@ -703,7 +730,12 @@ var room = {
     name: 'Allied Corp Building 100 Floor 365 Room B Bathroom',
     tag: 'ac100-365-b-bath',
     description: '\n    ',
-    map: ['365b-home'],
+    map: {
+        north: null,
+        east: null,
+        south: 'ac100-365-b',
+        west: null
+    },
     items: ['365b-bh200', '365b-b-closet', '365b-k150w', '365b-k400sw']
 };
 
@@ -719,7 +751,13 @@ var room = {
     name: 'Allied Corp Building 100 Elevators',
     tag: 'ac100-elevator',
     description: '\n    ',
-    map: ['365b-hall', 'old-new-york'],
+    map: {
+        1: 'ac100', // ground floor
+        100: 'ac100-100', // 100th floor
+        365: 'ac100-365', // 365th floor
+        500: 'ac100-500', // 500th floor
+        roof: 'ac100-roof' // roof
+    },
     items: []
 };
 
@@ -735,7 +773,13 @@ var room = {
     name: 'Allied Corp Building 100 Stairs',
     tag: 'ac100-stairs',
     description: '\n    ',
-    map: ['365b-hall', 'old-new-york'],
+    map: {
+        1: 'ac100', // ground floor
+        100: 'ac100-100', // 100th floor
+        365: 'ac100-365', // 365th floor
+        500: 'ac100-500', // 500th floor
+        roof: 'ac100-roof' // roof
+    },
     items: []
 };
 

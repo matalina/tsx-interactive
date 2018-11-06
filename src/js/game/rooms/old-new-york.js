@@ -3,7 +3,9 @@ let room = {
     tag: 'old-new-york',
     description: `
     `,
-    map: ['ac100'],
+    map: {
+        ac100: 'ac100',
+    },
     items: []
 };
 

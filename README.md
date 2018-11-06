@@ -5,6 +5,8 @@ An interactive choose your own adventure type story combined with the world expl
 
 ## To Do List
 
-- [ ] Create running timer
+- [X] Create running timer
 - [ ] Create function to trigger scripted events in a chapter to move/prompt user.
+- [ ] Create Teleportation system
+- [ ] Create Super Sonic Train system (triggered stops by time)
 

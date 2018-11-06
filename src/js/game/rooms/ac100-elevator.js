@@ -3,7 +3,13 @@ let room = {
     tag: 'ac100-elevator',
     description: `
     `,
-    map: ['365b-hall','old-new-york'],
+    map: {
+        1: 'ac100', // ground floor
+        100: 'ac100-100', // 100th floor
+        365: 'ac100-365', // 365th floor
+        500: 'ac100-500', // 500th floor
+        roof: 'ac100-roof', // roof
+    },
     items: []
 };
 

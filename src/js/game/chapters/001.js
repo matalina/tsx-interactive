@@ -16,6 +16,6 @@ But what was this bounty? Should you take the risk? Was it worth it? Look around
     next: `Mouse calls Reaper and you wait for the infamous gang leader to pick up.`,
     map: ['ac100-365-b','ac100-365-b-bath'],
     script: [
-
+        
     ],
 };

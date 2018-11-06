@@ -41,16 +41,20 @@ let verbs =  {
             case 'east':
             case 'south':
             case 'west':
-                room = words[0];
+                room =  store.state.location.map[words[0]];
+                break;
+            case 'around':
+                room = store.state.location.tag;
                 break;
             default:
                 return 'You look around. But you see nothing of interest.'
         }
+
         if(object !== null) {
             return store.state.items[object].description;
         }
         if(room !== null) {
-
+            return store.state.room[room].description;
         }
     },
 
